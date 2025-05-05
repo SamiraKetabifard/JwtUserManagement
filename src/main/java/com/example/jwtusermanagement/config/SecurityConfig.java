@@ -32,13 +32,13 @@ public class SecurityConfig {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth ->
-                        auth
-                                .requestMatchers("/api/login", "/api/register").permitAll()
-                                .requestMatchers(HttpMethod.GET, "/api/user/**").permitAll()
-                                .requestMatchers(HttpMethod.DELETE, "/api/user/**").hasRole("ADMIN")//just admin
-                                .anyRequest().authenticated())
-                .addFilterBefore(new AuthFilter(userDetailsService, jwtUtil), UsernamePasswordAuthenticationFilter.class)
-                .build();
+                  auth
+                       .requestMatchers("/api/login", "/api/register").permitAll()
+                       .requestMatchers(HttpMethod.GET, "/api/user/**").permitAll()
+                       .requestMatchers(HttpMethod.DELETE, "/api/user/**").hasRole("ADMIN")//just admin
+                       .anyRequest().authenticated())
+         .addFilterBefore(new AuthFilter(userDetailsService, jwtUtil), UsernamePasswordAuthenticationFilter.class)
+         .build();
     }
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -46,11 +46,12 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(HttpSecurity http, PasswordEncoder passwordEncoder) throws Exception {
-        AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
+    public AuthenticationManager authenticationManager
+            (HttpSecurity http, PasswordEncoder passwordEncoder) throws Exception {
+        AuthenticationManagerBuilder authenticationManagerBuilder =
+                http.getSharedObject(AuthenticationManagerBuilder.class);
         authenticationManagerBuilder.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
         return authenticationManagerBuilder.build();
     }
-
 }
 
