@@ -24,6 +24,7 @@ public class AuthController {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
+    private final AuthenticationManager authenticationManager;
 
     public AuthController(UserRepository userRepository, PasswordEncoder passwordEncoder,
                           AuthenticationManager authenticationManager, JwtUtil jwtUtil) {
@@ -32,7 +33,6 @@ public class AuthController {
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
     }
-    private final AuthenticationManager authenticationManager;
 
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody User user) {
@@ -42,18 +42,19 @@ public class AuthController {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return ResponseEntity.ok(userRepository.save(user));
     }
+
+    private void doAuthenticate(String username, String password) {
+        Authentication authToken = new UsernamePasswordAuthenticationToken(username, password);
+        authenticationManager.authenticate(authToken);
+    }
     @PostMapping("/login")
     public ResponseEntity<?> loginUser(@RequestBody User user) {
         try {
-            Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
-            if (authentication.isAuthenticated()) {
-                Map<String, Object> authData = new HashMap<>();
-                authData.put("token", jwtUtil.generateToken(user.getUsername()));
-                authData.put("type", "Bearer");
-                return ResponseEntity.ok(authData);
-            }
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
+            doAuthenticate(user.getUsername(), user.getPassword());
+            Map<String, Object> authData = new HashMap<>();
+            authData.put("token", jwtUtil.generateToken(user.getUsername()));
+            authData.put("type", "Bearer");
+            return ResponseEntity.ok(authData);
 
         } catch (AuthenticationException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");

@@ -20,7 +20,7 @@ public class User {
     private String password;
 
     @Column(name = "role")
-    @Enumerated(EnumType.STRING)
+    @Enumerated(EnumType.STRING)//save as string
     private Role role;
 
 }

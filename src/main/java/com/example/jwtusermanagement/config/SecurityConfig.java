@@ -20,37 +20,39 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class SecurityConfig {
 
-    private final CustomUserDetailsService userDetailsService;
+    private final CustomUserDetailsService customUserDetailsService;
     private final JwtUtil jwtUtil;
+    private final AuthFilter authFilter;
 
-    public SecurityConfig(CustomUserDetailsService userDetailsService, JwtUtil jwtUtil) {
-        this.userDetailsService = userDetailsService;
+    public SecurityConfig(CustomUserDetailsService userDetailsService, JwtUtil jwtUtil, AuthFilter authFilter) {
+        this.customUserDetailsService = userDetailsService;
         this.jwtUtil = jwtUtil;
+        this.authFilter = authFilter;
     }
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
-                .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(auth ->
-                  auth
-                       .requestMatchers("/api/login", "/api/register").permitAll()
-                       .requestMatchers(HttpMethod.GET, "/api/user/**").permitAll()
-                       .requestMatchers(HttpMethod.DELETE, "/api/user/**").hasRole("ADMIN")//just admin
-                       .anyRequest().authenticated())
-         .addFilterBefore(new AuthFilter(userDetailsService, jwtUtil), UsernamePasswordAuthenticationFilter.class)
-         .build();
+            .csrf(AbstractHttpConfigurer::disable)
+            .authorizeHttpRequests(auth ->
+              auth
+                   .requestMatchers("/api/login", "/api/register").permitAll()
+                   .requestMatchers(HttpMethod.GET, "/api/user/**").permitAll()
+                   .requestMatchers(HttpMethod.DELETE, "/api/user/**").hasRole("ADMIN")//just admin
+                   .anyRequest().authenticated())
+                .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class)
+       .build();
     }
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
     @Bean
     public AuthenticationManager authenticationManager
             (HttpSecurity http, PasswordEncoder passwordEncoder) throws Exception {
         AuthenticationManagerBuilder authenticationManagerBuilder =
                 http.getSharedObject(AuthenticationManagerBuilder.class);
-        authenticationManagerBuilder.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
+        authenticationManagerBuilder.userDetailsService(customUserDetailsService).passwordEncoder(passwordEncoder);
         return authenticationManagerBuilder.build();
     }
 }
