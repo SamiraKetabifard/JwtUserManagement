@@ -24,10 +24,12 @@ import java.util.List;
   public void deleteUser (@PathVariable long id) {
     userService.deleteUser(id);
 }
+//free access
   @GetMapping("/get/{id}")
   public User getUserById(@PathVariable long id) {
     return userService.getUser(id);
 }
+//free access
   @GetMapping ("/getall")
   public List<User> getAllUsers() {
     return userService.getAllUsers();

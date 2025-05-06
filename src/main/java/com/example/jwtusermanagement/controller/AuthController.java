@@ -33,7 +33,6 @@ public class AuthController {
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
     }
-
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody User user) {
         if (userRepository.findByUsername(user.getUsername()).isPresent()) {
@@ -42,7 +41,6 @@ public class AuthController {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return ResponseEntity.ok(userRepository.save(user));
     }
-
     private void doAuthenticate(String username, String password) {
         Authentication authToken = new UsernamePasswordAuthenticationToken(username, password);
         authenticationManager.authenticate(authToken);
