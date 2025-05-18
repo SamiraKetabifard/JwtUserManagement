@@ -51,9 +51,7 @@ public class AuthController {
             doAuthenticate(user.getUsername(), user.getPassword());
             Map<String, Object> authData = new HashMap<>();
             authData.put("token", jwtUtil.generateToken(user.getUsername()));
-            authData.put("type", "Bearer");
             return ResponseEntity.ok(authData);
-
         } catch (AuthenticationException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
         }

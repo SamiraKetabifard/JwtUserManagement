@@ -24,7 +24,7 @@ public class JwtUtil {
     @Value("${app.expiration-time}")
     private long expirationTime;
     
-    // Get the signing key used to sign the JWT token
+    // Decode the Base64-encoded secret key and return it as an HMAC-SHA key for signing JWT tokens
     private Key getSignKey() {
         return Keys.hmacShaKeyFor(Base64.getDecoder().decode(secretKey));
     }
