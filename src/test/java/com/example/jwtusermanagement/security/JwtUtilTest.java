@@ -1,7 +1,6 @@
 package com.example.jwtusermanagement.security;
 
 import com.example.jwtusermanagement.jwt.JwtUtil;
-import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -48,7 +47,7 @@ class JwtUtilTest {
     @Test
     void extractUsername_ValidToken_ReturnsCorrectUsername() {
         // Arrange
-        String username = "testuser@example.com";
+        String username = "samira@gmail.com";
         String token = Jwts.builder()
                 .setClaims(new HashMap<>())
                 .setSubject(username)
@@ -67,7 +66,7 @@ class JwtUtilTest {
     @Test
     void validateToken_ValidTokenAndUserDetails_ReturnsTrue() {
         // Arrange
-        String username = "validuser@example.com";
+        String username = "samira@gmail.com";
         String token = jwtUtil.generateToken(username);
         UserDetails userDetails = User.builder()
                 .username(username)
@@ -84,7 +83,7 @@ class JwtUtilTest {
     @Test
     void validateToken_ExpiredToken_ReturnsFalse() {
         // Arrange
-        String username = "expireduser@example.com";
+        String username = "samira@gmail.com";
         String token = Jwts.builder()
                 .setClaims(new HashMap<>())
                 .setSubject(username)
@@ -110,7 +109,7 @@ class JwtUtilTest {
         // Arrange
         String invalidToken = "invalid.token.string";
         UserDetails userDetails = User.builder()
-                .username("someuser@example.com")
+                .username("samira@gmail.com")
                 .password("password")
                 .authorities(Collections.emptyList())
                 .build();
@@ -122,8 +121,8 @@ class JwtUtilTest {
     @Test
     void validateToken_TokenWithDifferentUsername_ReturnsFalse() {
         // Arrange
-        String username = "tokenuser@example.com";
-        String differentUsername = "differentuser@example.com";
+        String username = "samira@gmail.com";
+        String differentUsername = "mari@gmail.com";
         String token = jwtUtil.generateToken(username);
         UserDetails userDetails = User.builder()
                 .username(differentUsername)
