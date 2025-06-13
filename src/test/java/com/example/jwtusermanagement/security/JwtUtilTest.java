@@ -19,7 +19,8 @@ import static org.junit.jupiter.api.Assertions.*;
 class JwtUtilTest {
 
     private JwtUtil jwtUtil;
-    private final String secretKey = Base64.getEncoder().encodeToString("test-secret-key-1234567890-1234567890".getBytes());
+    private final String secretKey = Base64.getEncoder().encodeToString
+            ("test-secret-key-1234567890-1234567890".getBytes());
     private final long expirationTime = 1000 * 60 * 60; // 1 hour
 
     @BeforeEach
@@ -32,7 +33,7 @@ class JwtUtilTest {
     @Test
     void generateToken_ValidUsername_ReturnsValidToken() {
         // Arrange
-        String username = "testuser@example.com";
+        String username = "samira@gmail.com";
         // Act
         String token = jwtUtil.generateToken(username);
         // Assert
