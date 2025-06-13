@@ -51,7 +51,7 @@ class AuthFilterTest {
     void doFilterInternal_ValidToken_SetsAuthentication() throws ServletException, IOException {
         // Arrange
         String token = "validToken";
-        String username = "samira.reza@gmail.com";
+        String username = "samira@gmail.com";
         User user = new User(1L, username, "password", Role.USER);
         UserDetails userDetails = new CustomUserDetails(user);
         when(request.getHeader("Authorization")).thenReturn("Bearer " + token);
@@ -87,7 +87,7 @@ class AuthFilterTest {
     void doFilterInternal_ExpiredToken_DoesNotSetAuthentication() throws ServletException, IOException {
         // Arrange
         String token = "expiredToken";
-        String username = "mari.samira@gmail.com";
+        String username = "samira@gmail.com";
         User user = new User(2L, username, "password", Role.ADMIN);
         UserDetails userDetails = new CustomUserDetails(user);
         when(request.getHeader("Authorization")).thenReturn("Bearer " + token);
@@ -124,7 +124,7 @@ class AuthFilterTest {
     void doFilterInternal_ValidTokenWithAdminRole_SetsCorrectAuthorities() throws ServletException, IOException {
         // Arrange
         String token = "adminToken";
-        String username = "admin.mari@gmail.com";
+        String username = "mari@gmail.com";
         User user = new User(3L, username, "adminPass", Role.ADMIN);
         UserDetails userDetails = new CustomUserDetails(user);
         when(request.getHeader("Authorization")).thenReturn("Bearer " + token);
