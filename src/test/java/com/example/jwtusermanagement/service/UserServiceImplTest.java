@@ -34,17 +34,14 @@ class UserServiceImplTest {
         user.setUsername("samira@gmail.com");
         user.setPassword("password123");
         user.setRole(Role.USER);
-
         when(passwordEncoder.encode("password123")).thenReturn("encodedPassword");
         when(userRepository.save(any(User.class))).thenAnswer(invocation -> {
             User u = invocation.getArgument(0);
             u.setId(1L);
             return u;
         });
-
         // Act
         User savedUser = userService.saveUser(user);
-
         // Assert
         assertNotNull(savedUser.getId());
         assertEquals("samira@gmail.com", savedUser.getUsername());
@@ -53,7 +50,6 @@ class UserServiceImplTest {
         verify(passwordEncoder).encode("password123");
         verify(userRepository).save(user);
     }
-
     @Test
     void getUser_UserExists_ReturnsUser() {
         // Arrange
@@ -62,55 +58,42 @@ class UserServiceImplTest {
         user.setUsername("samira@gmail.com");
         user.setPassword("password123");
         user.setRole(Role.ADMIN);
-
         when(userRepository.findById(1L)).thenReturn(Optional.of(user));
-
         // Act
         User foundUser = userService.getUser(1L);
-
         // Assert
         assertNotNull(foundUser);
         assertEquals(1L, foundUser.getId());
         assertEquals("samira@gmail.com", foundUser.getUsername());
     }
-
     @Test
     void getUser_UserNotExists_ReturnsNull() {
         // Arrange
         when(userRepository.findById(1L)).thenReturn(Optional.empty());
-
         // Act
         User foundUser = userService.getUser(1L);
-
         // Assert
         assertNull(foundUser);
     }
-
     @Test
     void getAllUsers_ReturnsAllUsers() {
         // Arrange
         User user1 = new User(1L, "samira@gmail.com", "pass1", Role.USER);
         User user2 = new User(2L, "samira@gmail.com", "pass2", Role.ADMIN);
         List<User> users = Arrays.asList(user1, user2);
-
         when(userRepository.findAll()).thenReturn(users);
-
         // Act
         List<User> allUsers = userService.getAllUsers();
-
         // Assert
         assertEquals(2, allUsers.size());
         assertTrue(allUsers.containsAll(users));
     }
-
     @Test
     void deleteUser_ValidId_DeletesUser() {
         // Arrange
         doNothing().when(userRepository).deleteById(1L);
-
         // Act
         userService.deleteUser(1L);
-
         // Assert
         verify(userRepository).deleteById(1L);
     }

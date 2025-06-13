@@ -30,7 +30,6 @@ class SecurityConfigIntegrationTest {
         mockMvc.perform(get("/api/protected"))
                 .andExpect(status().isOk());
     }
-
     @Test
     void publicEndpoint_ShouldBeAccessibleWithoutAuth() throws Exception {
         mockMvc.perform(get("/api/public"))

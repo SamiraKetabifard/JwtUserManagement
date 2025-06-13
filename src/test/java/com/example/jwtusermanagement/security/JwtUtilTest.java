@@ -29,21 +29,17 @@ class JwtUtilTest {
         ReflectionTestUtils.setField(jwtUtil, "secretKey", secretKey);
         ReflectionTestUtils.setField(jwtUtil, "expirationTime", expirationTime);
     }
-
     @Test
     void generateToken_ValidUsername_ReturnsValidToken() {
         // Arrange
         String username = "testuser@example.com";
-
         // Act
         String token = jwtUtil.generateToken(username);
-
         // Assert
         assertNotNull(token);
         assertFalse(token.isEmpty());
         assertEquals(username, jwtUtil.extractUsername(token));
     }
-
     @Test
     void extractUsername_ValidToken_ReturnsCorrectUsername() {
         // Arrange
@@ -55,14 +51,11 @@ class JwtUtilTest {
                 .setExpiration(new Date(System.currentTimeMillis() + expirationTime))
                 .signWith(getSignKey(), SignatureAlgorithm.HS256)
                 .compact();
-
         // Act
         String extractedUsername = jwtUtil.extractUsername(token);
-
         // Assert
         assertEquals(username, extractedUsername);
     }
-
     @Test
     void validateToken_ValidTokenAndUserDetails_ReturnsTrue() {
         // Arrange
@@ -73,10 +66,8 @@ class JwtUtilTest {
                 .password("password")
                 .authorities(Collections.emptyList())
                 .build();
-
         // Act
         boolean isValid = jwtUtil.validateToken(token, userDetails);
-
         // Assert
         assertTrue(isValid);
     }
@@ -91,16 +82,13 @@ class JwtUtilTest {
                 .setExpiration(new Date(System.currentTimeMillis() - 1000))
                 .signWith(getSignKey(), SignatureAlgorithm.HS256)
                 .compact();
-
         UserDetails userDetails = User.builder()
                 .username(username)
                 .password("password")
                 .authorities(Collections.emptyList())
                 .build();
-
         // Act
         boolean isValid = jwtUtil.validateToken(token, userDetails);
-
         // Assert
         assertFalse(isValid, "Expired token should be invalid");
     }
@@ -113,11 +101,9 @@ class JwtUtilTest {
                 .password("password")
                 .authorities(Collections.emptyList())
                 .build();
-
         // Act & Assert
         assertFalse(jwtUtil.validateToken(invalidToken, userDetails));
     }
-
     @Test
     void validateToken_TokenWithDifferentUsername_ReturnsFalse() {
         // Arrange
@@ -129,14 +115,11 @@ class JwtUtilTest {
                 .password("password")
                 .authorities(Collections.emptyList())
                 .build();
-
         // Act
         boolean isValid = jwtUtil.validateToken(token, userDetails);
-
         // Assert
         assertFalse(isValid);
     }
-
     private Key getSignKey() {
         return Keys.hmacShaKeyFor(Base64.getDecoder().decode(secretKey));
     }

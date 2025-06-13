@@ -22,24 +22,19 @@ class UserRepositoryTest {
         user.setPassword("password123");
         user.setRole(Role.USER);
         userRepository.save(user);
-
         // Act
         Optional<User> foundUser = userRepository.findByUsername("samira@gmail.com");
-
         // Assert
         assertTrue(foundUser.isPresent());
         assertEquals("samira@gmail.com", foundUser.get().getUsername());
     }
-
     @Test
     void findByUsername_UserNotExists_ReturnsEmpty() {
         // Act
         Optional<User> foundUser = userRepository.findByUsername("nonexistent@gmail.com");
-
         // Assert
         assertFalse(foundUser.isPresent());
     }
-
     @Test
     void saveUser_ValidUser_ReturnsSavedUser() {
         // Arrange
@@ -47,10 +42,8 @@ class UserRepositoryTest {
         user.setUsername("samira@gmail.com");
         user.setPassword("password123");
         user.setRole(Role.ADMIN);
-
         // Act
         User savedUser = userRepository.save(user);
-
         // Assert
         assertNotNull(savedUser.getId());
         assertEquals("samira@gmail.com", savedUser.getUsername());
